@@ -98,4 +98,6 @@ npm run build
 
 ## License
 
-<!-- Add the project license and attribution details here. -->
+This project is licensed under the [MIT License](LICENSE).
+
+Copyright (c) 2026 guillermo.
