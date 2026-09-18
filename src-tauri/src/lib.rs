@@ -1,4 +1,4 @@
-use tauri::{window, WebviewWindowBuilder};
+use tauri::WebviewWindowBuilder;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -20,17 +20,12 @@ pub fn run() {
             .title("WhatsApp")
             .inner_size(1100.0, 750.0)
             .min_inner_size(400.0, 500.0)
-            .on_navigation(|url| {
-                let url_str = url.as_str();
-                if url_str.starts_with("https://web.whatsapp.com") {
-                    true
-                } else {
-                    let _ = tauri_plugin_opener::open_url(url_str, None::<&str>);
-                    false
-                }
-            })
             .on_new_window(|url, _features| {
-                let _ = tauri_plugin_opener::open_url(url.as_str(), None::<&str>);
+                if matches!(url.scheme(), "http" | "https")
+                    && !url.host_str().unwrap_or_default().is_empty()
+                {
+                    let _ = tauri_plugin_opener::open_url(url.as_str(), None::<&str>);
+                }
                 tauri::webview::NewWindowResponse::Deny
             })
             .build()?;
